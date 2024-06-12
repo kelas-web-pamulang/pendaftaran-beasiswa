@@ -25,7 +25,7 @@ class ConfigDB
 
     public function select($table, $where = [])
     {
-        $query = "SELECT id_pendaftar, nama_mahasiswa, nim_mahasiswa, email_mahasiswa, alamat_mahasiswa, no_hp_mahasiswa, id_program_studi, semester_mahasiswa, ipk_terakhir_mahasiswa, id_pilihan_beasiswa, tanggal_hapus_data FROM $table where tanggal_hapus_data is null";
+        $query = "SELECT id_beasiswa, nama_beasiswa, id_program_studi, id_kategori, kuota, tanggal_hapus_data FROM $table where tanggal_hapus_data is null";
 
         foreach ($where as $key => $value) {
             $query .= " $key '$value'";
@@ -49,7 +49,7 @@ class ConfigDB
         foreach ($data as $key => $value) {
             $query .= "$key = '$value', ";
         }
-        $query .= "tanggal_perbarui_data = '$tanggal_perbarui_data' WHERE id_pendaftar='$id'";
+        $query .= "tanggal_perbarui_data = '$tanggal_perbarui_data' WHERE id_beasiswa='$id'";
 
         return $this->conn->query($query);
     }
