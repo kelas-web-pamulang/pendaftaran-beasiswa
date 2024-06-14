@@ -5,9 +5,11 @@ Anggota kelompok:
 2. Mohammad Fauzie Apriansyah
 
 Fitur:
-1. List daftar pendaftar
-2. Tambah data
-3. Edit dan hapus data pada halaman utama
-4. Cari data berdasarkan nama dan NIM
+1. Login, register, dan logout
+2. List daftar pendaftar
+3. Menampilkan 5 daftar beasiswa perhalaman
+4. Tambah data
+5. Edit dan hapus data pada halaman utama
+6. Cari data berdasarkan nama beasiswa, program studi, dan kategori
 
 Universitas Pamulang, Teknik Informatika
