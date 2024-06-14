@@ -7,6 +7,7 @@
     <title>Pendaftaran Beasiswa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
@@ -86,11 +87,20 @@
         }
     
         date_default_timezone_set('Asia/Jakarta');
-        ini_set('display_errors', '1');
+        ini_set('display_errors', '0');
         ini_set('display_startup_errors', '1');
         error_reporting(E_ALL);
 
         require_once 'config_db.php';
+        require 'vendor/autoload.php';
+
+        \Sentry\init([
+            'dsn' => 'https://999693e7f94de0beef314eb509a4411b@o4507427977822208.ingest.us.sentry.io/4507427981230080',
+            // Specify a fixed sample rate
+            'traces_sample_rate' => 1.0,
+            // Set a sampling rate for profiling - this is relative to traces_sample_rate
+            'profiles_sample_rate' => 1.0,
+          ]);
 
         $db = new ConfigDB();
         $conn = $db->connect();
@@ -126,10 +136,11 @@
                     <label for="programStudi">Program Studi</label>
                     <?php
                         $programStudi = $conn->query("SELECT id_program_studi, nama_program_studi FROM program_studi");
-                        echo "<select class='form-control' id='programStudi' name='id_program_studi' required>";
+                        echo "<select class='form-control form-select' id='programStudi' name='id_program_studi' required>";
                         echo "<option value=''>Pilih Program Studi</option>";
                         while ($row = $programStudi->fetch_assoc()) {
-                            echo "<option value='{$row['id_program_studi']}'>{$row['nama_program_studi']}</option>";
+                            $selected = ($beasiswa['id_program_studi'] == $row['id_program_studi']) ? 'selected' : '';
+                            echo "<option value='{$row['id_program_studi']}' $selected>{$row['nama_program_studi']}</option>";
                         }
                         echo "</select>";
                     ?>
@@ -137,11 +148,12 @@
                 <div class="form-group mb-3">
                     <label for="pilihanKategori">Kategori</label>
                     <?php
-                        $id_kategori = $conn->query("SELECT id_kategori, nama_kategori FROM kategori");
-                        echo "<select class='form-control' id='pilihanKategori' name='id_kategori' required>";
+                        $pilihanKategori = $conn->query("SELECT id_kategori, nama_kategori FROM kategori");
+                        echo "<select class='form-control form-select' id='pilihanKategori' name='id_kategori' required>";
                         echo "<option value=''>Pilih Kategori</option>";
-                        while ($row = $id_kategori->fetch_assoc()) {
-                            echo "<option value='{$row['id_kategori']}'>{$row['nama_kategori']}</option>";
+                        while ($row = $pilihanKategori->fetch_assoc()) {
+                            $selected = ($beasiswa['id_kategori'] == $row['id_kategori']) ? 'selected' : '';
+                            echo "<option value='{$row['id_kategori']}' $selected>{$row['nama_kategori']}</option>";
                         }
                         echo "</select>";
                     ?>
