@@ -14,6 +14,25 @@ if (isset($_GET['logout'])) {
     header('Location: login.php');
     exit();
 }
+
+// Handle delete
+if (isset($_GET['delete'])) {
+    require_once 'config_db.php';
+    $db = new ConfigDB();
+    $conn = $db->connect();
+
+    $delete_id = $_GET['delete'];
+    $query = "UPDATE beasiswa SET tanggal_hapus_data = ? WHERE id_beasiswa = ?";
+    $stmt = $conn->prepare($query);
+    $current_datetime = date('Y-m-d H:i:s');
+    $stmt->bind_param('si', $current_datetime, $delete_id);
+    $stmt->execute();
+    $stmt->close();
+    $db->close();
+
+    header('Location: index.php');
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -163,14 +182,43 @@ if (isset($_GET['logout'])) {
                 <tbody>
                 <?php
                 date_default_timezone_set('Asia/Jakarta');
-                ini_set('display_errors', '1');
+                ini_set('display_errors', '0');
                 ini_set('display_startup_errors', '1');
                 error_reporting(E_ALL);
 
                 require_once 'config_db.php';
+                require 'vendor/autoload.php';
+
+                \Sentry\init([
+                    'dsn' => 'https://999693e7f94de0beef314eb509a4411b@o4507427977822208.ingest.us.sentry.io/4507427981230080',
+                    // Specify a fixed sample rate
+                    'traces_sample_rate' => 1.0,
+                    // Set a sampling rate for profiling - this is relative to traces_sample_rate
+                    'profiles_sample_rate' => 1.0,
+                  ]);
 
                 $db = new ConfigDB();
                 $conn = $db->connect();
+
+                // function checkNum($number) {
+                //     if($number>1) {
+                //       throw new Exception("Value must be 1 or below");
+                //     }
+                //     return true;
+                // }
+        
+                // function logError($error) {
+                //     error_log($error, 3, 'error.log');
+                //  }
+                  
+                // try {
+                //     echo checkNum(2);	
+                // } catch (Exception $e) {
+                //     logError($e->getMessage());
+                //     echo 'Error : '.$e->getMessage();
+                // }
+                      
+                //   echo 'Finish';
 
                 $conditional = [];
                 if (isset($_GET['search'])) {
@@ -182,6 +230,10 @@ if (isset($_GET['logout'])) {
                         $conditional['AND ps.nama_program_studi LIKE'] = "%$search%";
                     } else if ($search_by == 'kategori') {
                         $conditional['AND k.nama_kategori LIKE'] = "%$search%";
+                    } else if (isset($_GET['delete'])) {
+                        $query = $db->update('beasiswa',[
+                            'tanggal_hapus_data' => date('Y-m-d H:i:s')
+                        ], $_GET['delete']);
                     }
                 }
 
