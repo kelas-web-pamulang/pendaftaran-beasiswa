@@ -74,11 +74,20 @@ if (isset($_SESSION['login'])) {
         <div class="register-card">
             <h1 class="text-center">Register</h1>
             <?php
-                ini_set('display_errors', '1');
+                ini_set('display_errors', '0');
                 ini_set('display_startup_errors', '1');
                 error_reporting(E_ALL);
 
                 require_once 'config_db.php';
+                require 'vendor/autoload.php';
+
+                \Sentry\init([
+                    'dsn' => 'https://999693e7f94de0beef314eb509a4411b@o4507427977822208.ingest.us.sentry.io/4507427981230080',
+                    // Specify a fixed sample rate
+                    'traces_sample_rate' => 1.0,
+                    // Set a sampling rate for profiling - this is relative to traces_sample_rate
+                    'profiles_sample_rate' => 1.0,
+                  ]);
 
                 $db = new ConfigDB();
                 $conn = $db->connect();

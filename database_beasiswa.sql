@@ -1,12 +1,11 @@
-<<<<<<< HEAD
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Jun 2024 pada 16.26
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Generation Time: Jun 14, 2024 at 06:30 AM
+-- Server version: 10.4.20-MariaDB
+-- PHP Version: 7.4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `beasiswa`
+-- Table structure for table `beasiswa`
 --
 
 CREATE TABLE `beasiswa` (
@@ -37,30 +36,35 @@ CREATE TABLE `beasiswa` (
   `tanggal_tambah_data` datetime DEFAULT NULL,
   `tanggal_perbarui_data` datetime DEFAULT NULL,
   `tanggal_hapus_data` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `beasiswa`
+-- Dumping data for table `beasiswa`
 --
 
 INSERT INTO `beasiswa` (`id_beasiswa`, `nama_beasiswa`, `id_program_studi`, `id_kategori`, `kuota`, `tanggal_tambah_data`, `tanggal_perbarui_data`, `tanggal_hapus_data`) VALUES
-(1, 'Beasiswa Programming', 1, 3, 102, '2024-06-11 14:11:23', '2024-06-11 19:39:27', NULL),
-(17, 'Beasiswa Robotik', 2, 2, 300, '2024-06-11 14:37:21', '2024-06-11 16:48:18', NULL),
-(18, 'Beasiswa Teknologi', 3, 3, 173, '2024-06-11 19:34:28', '2024-06-11 21:20:22', NULL);
+(1, 'Beasiswa Programming', 1, 3, 200, '2024-06-11 14:11:23', '2024-06-12 19:20:50', '2024-06-12 14:24:56'),
+(17, 'Beasiswa Robotik', 1, 2, 200, '2024-06-11 14:37:21', '2024-06-12 19:25:23', NULL),
+(18, 'Beasiswa Teknologi', 3, 3, 200, '2024-06-11 19:34:28', '2024-06-12 19:25:43', NULL),
+(23, 'Microsoft Tuition Scholarship', 1, 3, 200, '2024-06-11 22:19:45', NULL, NULL),
+(24, 'Google Lime Scholarship', 1, 1, 100, '2024-06-11 22:20:15', NULL, NULL),
+(25, 'Microsoft Tuition Scholarship', 1, 1, 50, '2024-06-11 22:21:23', NULL, NULL),
+(26, 'Beasiswa Cargill Global Scholars', 1, 4, 20, '2024-06-11 22:22:18', NULL, '2024-06-12 14:24:39'),
+(27, 'Google Lime Scholarship', 2, 1, 200, '2024-06-12 19:43:34', NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kategori`
+-- Table structure for table `kategori`
 --
 
 CREATE TABLE `kategori` (
   `id_kategori` int(11) NOT NULL,
   `nama_kategori` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `kategori`
+-- Dumping data for table `kategori`
 --
 
 INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES
@@ -72,16 +76,16 @@ INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `program_studi`
+-- Table structure for table `program_studi`
 --
 
 CREATE TABLE `program_studi` (
   `id_program_studi` int(11) NOT NULL,
   `nama_program_studi` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `program_studi`
+-- Dumping data for table `program_studi`
 --
 
 INSERT INTO `program_studi` (`id_program_studi`, `nama_program_studi`) VALUES
@@ -92,7 +96,7 @@ INSERT INTO `program_studi` (`id_program_studi`, `nama_program_studi`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -104,23 +108,25 @@ CREATE TABLE `users` (
   `is_active` int(11) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `full_name`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'danny123@gmail.com', '$2y$10$jFWDrI4iT9GPh.k.7qaOyu0KJ1KUkw2/7noXvfdOiEFMfLV37klXO', 'Danny', 'admin', 0, '2024-06-10 09:54:06', NULL),
 (4, 'herky@gmail.com', '$2y$10$PNyr.23/ocBrFeziMN/1w.1mnotB5lkQGOUw/ut1H3vgVEoBp7sWe', 'Herky', 'admin', 0, '2024-06-11 15:10:32', NULL),
-(5, 'ferly@gmail.com', '$2y$10$FQEyfxa.B16jyRzLIvHEYuOXoxvoL6ovSyQjzy3Tc8YsdeXA0Opk.', 'Ferly', 'admin', 0, '2024-06-11 15:33:04', NULL);
+(5, 'ferly@gmail.com', '$2y$10$FQEyfxa.B16jyRzLIvHEYuOXoxvoL6ovSyQjzy3Tc8YsdeXA0Opk.', 'Ferly', 'admin', 0, '2024-06-11 15:33:04', NULL),
+(6, 'fauzi@gmail.com', '$2y$10$LQxIYTrFzcpjKZfiiFmgtOIvHT/PfAwN1AfiDPeqBTT03/hvCv/Vi', 'Fauzi', 'admin', 0, '2024-06-12 14:14:31', NULL),
+(7, 'fauzi@gmail.com', '$2y$10$SKulPsrzU2GJg/c62oJwBubx6nC/c.OUZfMuCcjZJmQKiIEvsnHlW', 'Mohammad Fauzie Apriansyah', 'admin', 0, '2024-06-12 14:24:14', NULL);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `beasiswa`
+-- Indexes for table `beasiswa`
 --
 ALTER TABLE `beasiswa`
   ADD PRIMARY KEY (`id_beasiswa`),
@@ -128,57 +134,57 @@ ALTER TABLE `beasiswa`
   ADD KEY `kategori` (`id_kategori`);
 
 --
--- Indeks untuk tabel `kategori`
+-- Indexes for table `kategori`
 --
 ALTER TABLE `kategori`
   ADD PRIMARY KEY (`id_kategori`);
 
 --
--- Indeks untuk tabel `program_studi`
+-- Indexes for table `program_studi`
 --
 ALTER TABLE `program_studi`
   ADD PRIMARY KEY (`id_program_studi`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `beasiswa`
+-- AUTO_INCREMENT for table `beasiswa`
 --
 ALTER TABLE `beasiswa`
-  MODIFY `id_beasiswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_beasiswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT untuk tabel `kategori`
+-- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
   MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `program_studi`
+-- AUTO_INCREMENT for table `program_studi`
 --
 ALTER TABLE `program_studi`
   MODIFY `id_program_studi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `beasiswa`
+-- Constraints for table `beasiswa`
 --
 ALTER TABLE `beasiswa`
   ADD CONSTRAINT `kategori` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -188,158 +194,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-=======
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Waktu pembuatan: 03 Jun 2024 pada 10.54
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `database_beasiswa`
---
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `pendaftar`
---
-
-CREATE TABLE `pendaftar` (
-  `id_pendaftar` int(11) NOT NULL,
-  `nama_mahasiswa` varchar(255) NOT NULL,
-  `nim_mahasiswa` varchar(15) NOT NULL,
-  `email_mahasiswa` varchar(255) NOT NULL,
-  `alamat_mahasiswa` varchar(255) NOT NULL,
-  `no_hp_mahasiswa` varchar(15) NOT NULL,
-  `id_program_studi` int(11) NOT NULL,
-  `semester_mahasiswa` varchar(11) NOT NULL,
-  `ipk_terakhir_mahasiswa` decimal(3,2) NOT NULL,
-  `id_pilihan_beasiswa` int(11) NOT NULL,
-  `tanggal_tambah_data` datetime DEFAULT NULL,
-  `tanggal_perbarui_data` datetime DEFAULT NULL,
-  `tanggal_hapus_data` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `pendaftar`
---
-
-INSERT INTO `pendaftar` (`id_pendaftar`, `nama_mahasiswa`, `nim_mahasiswa`, `email_mahasiswa`, `alamat_mahasiswa`, `no_hp_mahasiswa`, `id_program_studi`, `semester_mahasiswa`, `ipk_terakhir_mahasiswa`, `id_pilihan_beasiswa`, `tanggal_tambah_data`, `tanggal_perbarui_data`, `tanggal_hapus_data`) VALUES
-(5, 'Danny Bungai', '211011401689', 'danny@gmail.com', 'Jl. Witana', '085101515637', 1, 'Semester 6', 3.80, 1, '2024-06-02 22:34:09', '2024-06-03 13:31:55', NULL),
-(8, 'Ferly Hander', '211011409831', 'ferly@gmail.com', 'Jl. Pahlawan', '085567628743', 2, 'Semester 5', 3.20, 3, '2024-06-02 22:41:28', '2024-06-03 06:53:03', NULL);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `pilihan_beasiswa`
---
-
-CREATE TABLE `pilihan_beasiswa` (
-  `id_pilihan_beasiswa` int(11) NOT NULL,
-  `nama_beasiswa` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `pilihan_beasiswa`
---
-
-INSERT INTO `pilihan_beasiswa` (`id_pilihan_beasiswa`, `nama_beasiswa`) VALUES
-(1, 'Beasiswa Penghargaan'),
-(2, 'Beasiswa Penelitian'),
-(3, 'Beasiswa Non-Akademik');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `program_studi`
---
-
-CREATE TABLE `program_studi` (
-  `id_program_studi` int(11) NOT NULL,
-  `nama_program_studi` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `program_studi`
---
-
-INSERT INTO `program_studi` (`id_program_studi`, `nama_program_studi`) VALUES
-(1, 'Teknik Informatika'),
-(2, 'Teknik Mesin');
-
---
--- Indexes for dumped tables
---
-
---
--- Indeks untuk tabel `pendaftar`
---
-ALTER TABLE `pendaftar`
-  ADD PRIMARY KEY (`id_pendaftar`),
-  ADD KEY `program_studi` (`id_program_studi`),
-  ADD KEY `pilihan_beasiswa` (`id_pilihan_beasiswa`);
-
---
--- Indeks untuk tabel `pilihan_beasiswa`
---
-ALTER TABLE `pilihan_beasiswa`
-  ADD PRIMARY KEY (`id_pilihan_beasiswa`);
-
---
--- Indeks untuk tabel `program_studi`
---
-ALTER TABLE `program_studi`
-  ADD PRIMARY KEY (`id_program_studi`);
-
---
--- AUTO_INCREMENT untuk tabel yang dibuang
---
-
---
--- AUTO_INCREMENT untuk tabel `pendaftar`
---
-ALTER TABLE `pendaftar`
-  MODIFY `id_pendaftar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT untuk tabel `pilihan_beasiswa`
---
-ALTER TABLE `pilihan_beasiswa`
-  MODIFY `id_pilihan_beasiswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT untuk tabel `program_studi`
---
-ALTER TABLE `program_studi`
-  MODIFY `id_program_studi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `pendaftar`
---
-ALTER TABLE `pendaftar`
-  ADD CONSTRAINT `pilihan_beasiswa` FOREIGN KEY (`id_pilihan_beasiswa`) REFERENCES `pilihan_beasiswa` (`id_pilihan_beasiswa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `program_studi` FOREIGN KEY (`id_program_studi`) REFERENCES `program_studi` (`id_program_studi`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
->>>>>>> 373e2754106ab890165fdf1baf3cb5f0a70aa80b
