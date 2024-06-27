@@ -100,13 +100,21 @@ if (isset($_SESSION['login'])) {
                     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                     $createAt = date('Y-m-d H:i:s');
 
-                    $query = "INSERT INTO users (email, full_name, password, role, created_at) VALUES ('$email', '$name', '$password', 'admin', '$createAt')";
-                    $queryExecute = $conn->query($query);
+                    // Check if email already exists
+                    $checkQuery = "SELECT * FROM users WHERE email='$email'";
+                    $result = $conn->query($checkQuery);
 
-                    if ($queryExecute) {
-                        $message = "<div class='alert alert-success mt-3' role='alert'>Berhasil mendaftar akun</div>";
+                    if ($result->num_rows > 0) {
+                        $message = "<div class='alert alert-danger mt-3' role='alert'>Email sudah terdaftar</div>";
                     } else {
-                        $message = "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
+                        $query = "INSERT INTO users (email, full_name, password, role, created_at) VALUES ('$email', '$name', '$password', 'admin', '$createAt')";
+                        $queryExecute = $conn->query($query);
+
+                        if ($queryExecute) {
+                            $message = "<div class='alert alert-success mt-3' role='alert'>Berhasil mendaftar akun</div>";
+                        } else {
+                            $message = "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
+                        }
                     }
                 }
 

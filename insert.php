@@ -139,7 +139,7 @@
                         echo "<select class='form-control form-select' id='programStudi' name='id_program_studi' required>";
                         echo "<option value=''>Pilih Program Studi</option>";
                         while ($row = $programStudi->fetch_assoc()) {
-                            $selected = ($beasiswa['id_program_studi'] == $row['id_program_studi']) ? 'selected' : '';
+                            $selected = (isset($beasiswa['id_program_studi']) && isset($row['id_program_studi']) && $beasiswa['id_program_studi'] == $row['id_program_studi']) ? 'selected' : '';
                             echo "<option value='{$row['id_program_studi']}' $selected>{$row['nama_program_studi']}</option>";
                         }
                         echo "</select>";
@@ -152,7 +152,7 @@
                         echo "<select class='form-control form-select' id='pilihanKategori' name='id_kategori' required>";
                         echo "<option value=''>Pilih Kategori</option>";
                         while ($row = $pilihanKategori->fetch_assoc()) {
-                            $selected = ($beasiswa['id_kategori'] == $row['id_kategori']) ? 'selected' : '';
+                            $selected = (isset($beasiswa['id_kategori']) && isset($row['id_kategori']) && $beasiswa['id_kategori'] == $row['id_kategori']) ? 'selected' : '';
                             echo "<option value='{$row['id_kategori']}' $selected>{$row['nama_kategori']}</option>";
                         }
                         echo "</select>";
