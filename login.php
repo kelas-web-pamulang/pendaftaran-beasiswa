@@ -69,7 +69,12 @@
 
                 session_start();
                 if (isset($_SESSION['login'])) {
-                    header('Location: index.php');
+                    if ($_SESSION['role'] === 'admin') {
+                        header('Location: admin/index.php');
+                    } else {
+                        header('Location: member/index.php');
+                    }
+                    exit();
                 }
 
                 require_once 'config_db.php';
@@ -92,7 +97,7 @@
                     $email = htmlspecialchars($_POST['email']);
                     $password = htmlspecialchars($_POST['password']);
 
-                    $query = "SELECT id, email, full_name, password FROM users WHERE email = '$email'";
+                    $query = "SELECT id, email, full_name, password, role FROM users WHERE email = '$email'";
                     $queryExecute = $conn->query($query);
 
                     if ($queryExecute->num_rows > 0) {
@@ -102,10 +107,16 @@
                             $_SESSION['login'] = true;
                             $_SESSION['userId'] = $user['id'];
                             $_SESSION['userName'] = $user['full_name'];
-                            
+                            $_SESSION['role'] = $user['role'];
+
                             setcookie('clientId', $user['id'], time() + 86400, '/');
                             setcookie('clientSecret', hash('sha256', $user['email']), time() + 86400, '/');
-                            header('Location: index.php');
+
+                            if ($user['role'] == 'admin') {
+                                header('Location: admin/index.php');
+                            } else {
+                                header('Location: member/index.php');
+                            }
                         } else {
                             $message = "<div class='alert alert-danger' role='alert'>Email/Password salah</div>";
                         }

@@ -2,7 +2,11 @@
 session_start();
 
 if (isset($_SESSION['login'])) {
-    header('Location: index.php');
+    if ($_SESSION['role'] === 'admin') {
+        header('Location: admin/index.php');
+    } else {
+        header('Location: member/index.php');
+    }
     exit();
 }
 ?>
@@ -107,7 +111,8 @@ if (isset($_SESSION['login'])) {
                     if ($result->num_rows > 0) {
                         $message = "<div class='alert alert-danger mt-3' role='alert'>Email sudah terdaftar</div>";
                     } else {
-                        $query = "INSERT INTO users (email, full_name, password, role, created_at) VALUES ('$email', '$name', '$password', 'admin', '$createAt')";
+                        // Insert user with 'member' role
+                        $query = "INSERT INTO users (email, full_name, password, role, created_at) VALUES ('$email', '$name', '$password', 'member', '$createAt')";
                         $queryExecute = $conn->query($query);
 
                         if ($queryExecute) {
@@ -120,7 +125,7 @@ if (isset($_SESSION['login'])) {
 
                 echo $message;
             ?>
-            <form action="" method="post">
+            <form action="" method="post" onsubmit="return validateForm()">
                 <div class="form-group mb-3">
                     <label for="nameInput">Nama</label>
                     <div class="input-group">
@@ -136,7 +141,7 @@ if (isset($_SESSION['login'])) {
                 <div class="form-group mb-3">
                     <label for="passwordInput">Password</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Masukkan password" required>
+                    <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Masukkan password" required maxlength="128">
                         <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                             <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
                         </button>
@@ -168,6 +173,27 @@ if (isset($_SESSION['login'])) {
             togglePasswordIcon.classList.remove('bi-eye');
             togglePasswordIcon.classList.add('bi-eye-slash');
         }
+    }
+
+    function validateForm() {
+        // Ambil nilai input
+        var password = document.getElementById('passwordInput').value;
+
+        // Periksa panjang password (minimal 8 karakter)
+        if (password.length < 8) {
+            alert('Password harus terdiri dari minimal 8 karakter');
+            return false;
+        }
+
+        // Periksa kekuatan password (misalnya: minimal satu huruf besar, satu huruf kecil, dan satu angka)
+        var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+        if (!regex.test(password)) {
+            alert('Password harus mengandung setidaknya satu huruf besar, satu huruf kecil, dan satu angka');
+            return false;
+        }
+
+        // Jika lolos validasi, kembalikan true untuk mengirimkan data
+        return true;
     }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
