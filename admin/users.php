@@ -28,7 +28,7 @@ if (isset($_GET['delete'])) {
     $conn = $db->connect();
 
     $delete_id = $_GET['delete'];
-    $query = "UPDATE beasiswa SET tanggal_hapus_data = ? WHERE id_beasiswa = ?";
+    $query = "UPDATE users SET deleted_at = ? WHERE id = ?";
     $stmt = $conn->prepare($query);
     $current_datetime = date('Y-m-d H:i:s');
     $stmt->bind_param('si', $current_datetime, $delete_id);
@@ -36,7 +36,7 @@ if (isset($_GET['delete'])) {
     $stmt->close();
     $db->close();
 
-    header('Location: index.php');
+    header('Location: users.php');
     exit();
 }
 ?>
@@ -47,7 +47,7 @@ if (isset($_GET['delete'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pendaftar Beasiswa</title>
+    <title>Kelola Pengguna</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -61,18 +61,8 @@ if (isset($_GET['delete'])) {
         .container {
             flex: 1;
         }
-        .judul-container {
-            background-color: rgba(236, 240, 241, 0.9); 
-            color: #ffffff; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
         .pendaftar-container {
+            margin-top: 50px;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -109,6 +99,16 @@ if (isset($_GET['delete'])) {
             color: #ffffff;
             background-color: #004D6E;
             border-color: #004D6E;  
+        }
+        .btn-member {
+            color: #ffffff;
+            background-color: #918A00;
+            border-color: #918A00;
+        }
+        .btn-member:hover {
+            color: #ffffff;
+            background-color: #474400;
+            border-color: #474400;
         }
         .btn-danger {
             background-color: #dc3545;
@@ -149,48 +149,34 @@ if (isset($_GET['delete'])) {
         .alert {
             margin-top: 15px;
         }
-        footer {
-            background-color: #4b6cb7;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="judul-container">
-            <h1 class="text-center">Pendaftar Beasiswa</h1>
-            <a id="logout-button" href="?logout=true" class="btn btn-danger">Logout</a>
-        </div>
-
         <div class="pendaftar-container">
+            <h1 class="text-center">Kelola Pengguna</h1>
             <div class="row mb-3">
                 <div class="d-flex justify-content-between">
                     <form action="" method="get" class="d-flex align-items-center">
                         <input class="form-control me-2" placeholder="Cari Data" name="search"/>
                         <select name="search_by" class="form-select me-2">
                             <option value="">Pilih Berdasarkan</option>
-                            <option value="nama_beasiswa">Nama Beasiswa</option>
-                            <option value="program_studi">Program Studi</option>
-                            <option value="kategori">Kategori</option>
+                            <option value="full_name">Nama Lengkap</option>
+                            <option value="email">Email</option>
+                            <option value="role">Role</option>
                         </select>
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </form>
-                    <a href="users.php" class="ms-auto"><button class="btn btn-primary">Kelola Pengguna</button></a>
-                    <a href="insert.php" class="ms-auto"><button class="btn btn-primary">Tambah Data</button></a>
+                    <a href="index.php" class="ms-auto"><button class="btn btn-primary">Kembali</button></a>
                 </div>
             </div>
             <table class="table">
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Beasiswa</th>
-                    <th>Program Studi</th>
-                    <th>Kategori</th>
-                    <th>Kuota</th>
+                    <th>Nama Lengkap</th>
+                    <th>Email</th>
+                    <th>Role</th>
                     <th>Tgl. Buat</th>
                     <th colspan="2">Pilihan</th>
                 </tr>
@@ -198,7 +184,7 @@ if (isset($_GET['delete'])) {
                 <tbody>
                 <?php
                 date_default_timezone_set('Asia/Jakarta');
-                ini_set('display_errors', '0');
+                ini_set('display_errors', '1');
                 ini_set('display_startup_errors', '1');
                 error_reporting(E_ALL);
 
@@ -207,29 +193,43 @@ if (isset($_GET['delete'])) {
 
                 \Sentry\init([
                     'dsn' => 'https://999693e7f94de0beef314eb509a4411b@o4507427977822208.ingest.us.sentry.io/4507427981230080',
-                    // Specify a fixed sample rate
                     'traces_sample_rate' => 1.0,
-                    // Set a sampling rate for profiling - this is relative to traces_sample_rate
                     'profiles_sample_rate' => 1.0,
                 ]);
 
                 $db = new ConfigDB();
                 $conn = $db->connect();
 
+                if (isset($_POST['make_admin'])) {
+                    $id = intval($_POST['user_id']);
+                    $updateQuery = "UPDATE users SET role = 'admin' WHERE id = $id";
+                    if ($conn->query($updateQuery) === TRUE) {
+                        echo "<div class='alert alert-success'>Peran pengguna berhasil diubah menjadi admin</div>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Terjadi kesalahan: " . $conn->error . "</div>";
+                    }
+                }
+
+                if (isset($_POST['make_member'])) {
+                    $id = intval($_POST['user_id']);
+                    $updateQuery = "UPDATE users SET role = 'member' WHERE id = $id";
+                    if ($conn->query($updateQuery) === TRUE) {
+                        echo "<div class='alert alert-success'>Peran pengguna berhasil diubah menjadi member</div>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Terjadi kesalahan: " . $conn->error . "</div>";
+                    }
+                }
+
                 $conditional = [];
                 if (isset($_GET['search'])) {
                     $search = $_GET['search'];
                     $search_by = $_GET['search_by'];
-                    if ($search_by == 'nama_beasiswa') {
-                        $conditional['AND nama_beasiswa LIKE'] = "%$search%";
-                    } else if ($search_by == 'program_studi') {
-                        $conditional['AND ps.nama_program_studi LIKE'] = "%$search%";
-                    } else if ($search_by == 'kategori') {
-                        $conditional['AND k.nama_kategori LIKE'] = "%$search%";
-                    } else if (isset($_GET['delete'])) {
-                        $query = $db->update('beasiswa', [
-                            'tanggal_hapus_data' => date('Y-m-d H:i:s')
-                        ], $_GET['delete']);
+                    if ($search_by == 'full_name') {
+                        $conditional['AND full_name LIKE'] = "%$search%";
+                    } else if ($search_by == 'email') {
+                        $conditional['AND email LIKE'] = "%$search%";
+                    } else if ($search_by == 'role') {
+                        $conditional['AND role LIKE'] = "%$search%";
                     }
                 }
 
@@ -239,17 +239,14 @@ if (isset($_GET['delete'])) {
                     $limit = $_GET["limit"];
                 }
 
-                // Pagination logic
                 $page = isset($_GET["page"]) ? $_GET["page"] : 1; 
                 $start_from = ($page - 1) * $limit;
 
-                // Query data dengan menggunakan $limit dan $start_from
-                $query = "SELECT b.id_beasiswa, b.nama_beasiswa, ps.nama_program_studi, k.nama_kategori, b.kuota,
-                        b.tanggal_tambah_data 
-                        FROM beasiswa b 
-                        LEFT JOIN program_studi ps ON b.id_program_studi = ps.id_program_studi 
-                        LEFT JOIN kategori k ON b.id_kategori = k.id_kategori
-                        WHERE b.tanggal_hapus_data IS NULL";
+                $current_user_email = $_SESSION['email'];
+
+                $query = "SELECT id, email, full_name, role, created_at
+                        FROM users
+                        WHERE deleted_at IS NULL AND email <> '$current_user_email'";
 
                 if (!empty($conditional)) {
                     foreach ($conditional as $key => $value) {
@@ -257,7 +254,7 @@ if (isset($_GET['delete'])) {
                     }
                 }
 
-                $query .= " ORDER BY b.tanggal_tambah_data DESC LIMIT $start_from, $limit";
+                $query .= " ORDER BY created_at DESC LIMIT $start_from, $limit";
 
                 $result = $conn->query($query);
                 $totalRows = $result->num_rows;
@@ -266,21 +263,36 @@ if (isset($_GET['delete'])) {
                     foreach ($result as $key => $row) {
                         echo "<tr>";
                         echo "<td>".($key + 1 + $start_from)."</td>";
-                        echo "<td>".$row['nama_beasiswa']."</td>";
-                        echo "<td>".$row['nama_program_studi']."</td>";
-                        echo "<td>".$row['nama_kategori']."</td>";
-                        echo "<td>".$row['kuota']."</td>";
-                        echo "<td>".$row['tanggal_tambah_data']."</td>";
-                        echo "<td><a class='btn btn-sm btn-info' href='update.php?id=$row[id_beasiswa]'>Update</a></td>";
-                        echo "<td><a class='btn btn-sm btn-danger delete-button' href='index.php?delete=$row[id_beasiswa]'>Delete</a></td>";
+                        echo "<td>".$row['full_name']."</td>";
+                        echo "<td>".$row['email']."</td>";
+                        echo "<td>".$row['role']."</td>";
+                        echo "<td>".$row['created_at']."</td>";
+
+                        if ($row['role'] !== 'admin') {
+                            echo "<td>
+                                    <form method='POST' action='' onsubmit='return confirmMakeAdmin()'>
+                                        <input type='hidden' name='user_id' value='$row[id]' />
+                                        <button type='submit' name='make_admin' class='btn btn-sm btn-info'>Jadikan Admin</button>
+                                    </form>
+                                  </td>";
+                        } else {
+                            echo "<td>
+                                    <form method='POST' action='' onsubmit='return confirmMakeMember()'>
+                                        <input type='hidden' name='user_id' value='$row[id]' />
+                                        <button type='submit' name='make_member' class='btn btn-sm btn-member'>Cabut Hak Admin</button>
+                                    </form>
+                                  </td>";
+                        }
+
+                        echo "<td><a class='btn btn-sm btn-danger delete-button' href='users.php?delete=$row[id]'>Delete</a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='12' class='text-center'>Tidak ada data</td></tr>";
+                    echo "<tr><td colspan='7' class='text-center'>Tidak ada data</td></tr>";
                 }
 
                 // Pagination
-                $result_db = $conn->query("SELECT COUNT(id_beasiswa) FROM beasiswa WHERE tanggal_hapus_data IS NULL");
+                $result_db = $conn->query("SELECT COUNT(id) FROM users WHERE deleted_at IS NULL");
                 $row_db = $result_db->fetch_row(); 
                 $total_records = $row_db[0];  
                 $total_pages = ceil($total_records / $limit);
@@ -294,15 +306,12 @@ if (isset($_GET['delete'])) {
                 <ul class="pagination justify-content-center">
                     <?php 
                     $pagLink = "";
-
-                    // Text "Halaman:"
                     $pagLink .= '<li class="page-item"><span class="page-link ms-5 page-label">Halaman:</span></li>';
 
-                    // Tombol navigasi halaman
                     for ($i = 1; $i <= $total_pages; $i++) {
                         $activeClass = ($i == $page) ? 'active' : '';
                         $pagLink .= '<li class="page-item ' . $activeClass . '">';
-                        $pagLink .= '<a class="page-link" href="index.php?page=' . $i . '&limit=' . $limit . '">' . $i . '</a>';
+                        $pagLink .= '<a class="page-link" href="users.php?page=' . $i . '&limit=' . $limit . '">' . $i . '</a>';
                         $pagLink .= '</li>';
                     }
 
@@ -314,11 +323,16 @@ if (isset($_GET['delete'])) {
 
         </div>
     </div>
-    <footer class="mt-5">
-        Tugas Project Praktisi Mengajar | Dibuat oleh Danny Bungai & Mohammad Fauzie Apriansyah
-    </footer>
     
     <script>
+        function confirmMakeAdmin() {
+            return confirm('Apakah Anda yakin ingin menjadikan pengguna ini sebagai admin?');
+        }
+
+        function confirmMakeMember() {
+            return confirm('Apakah Anda yakin ingin mencabut role pengguna ini sebagai admin?');
+        }
+
         document.querySelectorAll('.delete-button').forEach(button => {
             button.addEventListener('click', function(event) {
                 event.preventDefault();
@@ -327,14 +341,6 @@ if (isset($_GET['delete'])) {
                     window.location.href = this.href;
                 }
             });
-        });
-
-        document.getElementById('logout-button').addEventListener('click', function(event) {
-            event.preventDefault();
-            const confirmed = confirm('Apakah Anda yakin ingin logout?');
-            if (confirmed) {
-                window.location.href = this.href;
-            }
         });
     </script>
 </body>
