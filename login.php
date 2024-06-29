@@ -108,10 +108,11 @@
                             $_SESSION['userId'] = $user['id'];
                             $_SESSION['userName'] = $user['full_name'];
                             $_SESSION['role'] = $user['role'];
-
+                            $_SESSION['email'] = $user['email'];
+                    
                             setcookie('clientId', $user['id'], time() + 86400, '/');
                             setcookie('clientSecret', hash('sha256', $user['email']), time() + 86400, '/');
-
+                    
                             if ($user['role'] == 'admin') {
                                 header('Location: admin/index.php');
                             } else {
